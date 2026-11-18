@@ -22,6 +22,6 @@
 | **R2** | **Yearly accrual** = 1.75 % × pensionable salary. Rounded to cents. | € 17,073 → **€ 298.78** per year |
 | **R3** | **Accrued pension** = sum of the yearly accruals in the contribution history (career average). | 3 years × € 500.00 = € 1,500.00 per year |
 | **R4** | **Projection** at 68 = accrued pension + accrual for every remaining whole year until 68 (same part-time factor; optional salary growth). | — |
-| **R5** | **Early retirement** between 60 and 67: accrual stops at the early date; the total yearly pension is reduced by 6.5 % × (68 − retirement age). Ages below 60, above 68 or below the member's current age are rejected (HTTP 422). | retire at 63 → reduction 5 × 6.5 % = **32.5 %** |
+| **R5** | **Early retirement** between 60 and 67: accrual stops at the early date; the total yearly pension is reduced by 6.5 % × (68 − retirement age). The supported retirement-age range is 60–68, with 68 as the standard age and no reduction. Ages below 60, above 68 or below the member's current age are rejected (HTTP 422). | retire at 63 → reduction 5 × 6.5 % = **32.5 %** |
 | **R6** | **Contribution** = 27 % × pensionable salary; employer pays 60 %, employee 40 %. | € 10,000 → € 1,620 employer / € 1,080 employee |
 | **R7** | The **annual statement** shows the CURRENT pensionable salary and this year's accrual using the member's **current** salary **and part-time factor** (R1). | M-1003: € 17,073 / € 298.78 |

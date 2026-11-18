@@ -42,12 +42,44 @@ test('projection at the standard retirement age adds future accrual', () => {
   });
   assert.equal(result.yearsToRetirement, 14);
   assert.equal(result.futureAccrual, 8_441.44);
+  assert.equal(result.unreducedAnnualPension, 13_441.44);
+  assert.equal(result.earlyRetirementReduction, 0);
   assert.equal(result.projectedAnnualPension, 13_441.44);
   assert.equal(result.retirementDate, '2040-04-15');
 });
 
-test('projection rejects early retirement (not supported yet)', () => {
-  assert.throws(() => projectPension({
-    birthDate: '1972-04-15', fullTimeSalary: 52_000, partTimeFactor: 1, accruedToDate: 0, asOf: '2026-11-18', retirementAge: 63,
-  }), /early retirement is not supported/);
+test('projection stops accrual at early retirement and reduces the total pension', () => {
+  const result = projectPension({
+    birthDate: '1972-04-15', fullTimeSalary: 52_000, partTimeFactor: 1, accruedToDate: 5_000, asOf: '2026-11-18', retirementAge: 63,
+  });
+  assert.equal(result.yearsToRetirement, 9);
+  assert.equal(result.futureAccrual, 5_426.64);
+  assert.equal(result.unreducedAnnualPension, 10_426.64);
+  assert.equal(result.earlyRetirementReduction, 0.325);
+  assert.equal(result.projectedAnnualPension, 7_037.98);
+});
+
+test('projection accepts the earliest retirement age', () => {
+  const result = projectPension({
+    birthDate: '1972-04-15', fullTimeSalary: 52_000, partTimeFactor: 1, accruedToDate: 0, asOf: '2026-11-18', retirementAge: 60,
+  });
+  assert.equal(result.yearsToRetirement, 6);
+  assert.equal(result.earlyRetirementReduction, 0.52);
+});
+
+test('projection accepts retirement at the member current age without future accrual', () => {
+  const result = projectPension({
+    birthDate: '1966-06-30', fullTimeSalary: 52_000, partTimeFactor: 1, accruedToDate: 5_000, asOf: '2026-11-18', retirementAge: 60,
+  });
+  assert.equal(result.yearsToRetirement, 0);
+  assert.equal(result.futureAccrual, 0);
+});
+
+test('projection rejects retirement ages outside the supported range or below current age', () => {
+  const base = {
+    birthDate: '1972-04-15', fullTimeSalary: 52_000, partTimeFactor: 1, accruedToDate: 0, asOf: '2026-11-18',
+  };
+  assert.throws(() => projectPension({ ...base, retirementAge: 59 }), RangeError);
+  assert.throws(() => projectPension({ ...base, retirementAge: 69 }), RangeError);
+  assert.throws(() => projectPension({ ...base, retirementAge: 53 }), RangeError);
 });
